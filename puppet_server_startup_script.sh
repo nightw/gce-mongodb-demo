@@ -18,10 +18,10 @@ if ! dpkg --get-selections | grep -q 'puppet-agent.*install'; then
 fi
 
 # Now install puppet modules if needed
-if test -d '/etc/puppetlabs/code/environments/production/modules/ntp'; then
+if ! test -d '/etc/puppetlabs/code/environments/production/modules/ntp'; then
   puppet module install puppetlabs-ntp --version 6.0.0
 fi
-if test -d '/etc/puppetlabs/code/environments/production/modules/puppet'; then
+if ! test -d '/etc/puppetlabs/code/environments/production/modules/puppet'; then
   puppet module install theforeman-puppet --version 7.0.0
 fi
 
