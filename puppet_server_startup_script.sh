@@ -30,6 +30,9 @@ fi
 if ! test -d '/etc/puppetlabs/code/environments/production/modules/puppet'; then
   /opt/puppetlabs/bin/puppet module install theforeman-puppet --version 7.0.0
 fi
+if ! test -d '/etc/puppetlabs/code/environments/production/modules/puppet_module'; then
+  /opt/puppetlabs/bin/puppet module install dowlingw-puppet_module --version 0.0.4
+fi
 
 # Now get the puppet server code from this project publicly via HTTPS from GitHub and run it if needed
 if ! dpkg --get-selections | grep -q 'puppetserver.*install'; then
