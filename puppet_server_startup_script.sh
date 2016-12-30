@@ -28,6 +28,6 @@ fi
 # Now get the puppet server code from this project publicly via HTTPS from GitHub and run it if needed
 if ! dpkg --get-selections | grep -q 'puppetserver.*install'; then
   wget https://raw.githubusercontent.com/nightw/gce-mongodb-demo/master/puppet_server_bootstrap.pp
-  puppet apply --verbose puppet_server_bootstrap.pp
+  /opt/puppetlabs/bin/puppet apply --verbose puppet_server_bootstrap.pp
   rm puppet_server_bootstrap.pp
 fi
