@@ -19,10 +19,10 @@ fi
 
 # Now install puppet modules if needed
 if ! test -d '/etc/puppetlabs/code/environments/production/modules/ntp'; then
-  puppet module install puppetlabs-ntp --version 6.0.0
+  /opt/puppetlabs/bin/puppet module install puppetlabs-ntp --version 6.0.0
 fi
 if ! test -d '/etc/puppetlabs/code/environments/production/modules/puppet'; then
-  puppet module install theforeman-puppet --version 7.0.0
+  /opt/puppetlabs/bin/puppet module install theforeman-puppet --version 7.0.0
 fi
 
 # Now get the puppet server code from this project publicly via HTTPS from GitHub and run it if needed
