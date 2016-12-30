@@ -11,6 +11,7 @@ class gce_mongodb_test_puppet_server::puppet_server_base {
     server_jvm_min_heap_size   => '800M',
     server_jvm_max_heap_size   => '1200M',
     autosign                   => true,
+    server_certname            => 'puppet-server',
   }
 
 }
