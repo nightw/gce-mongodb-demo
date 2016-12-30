@@ -8,7 +8,7 @@ class gce_mongodb_test_puppet_server::cron_repo_sync {
     owner  => 'root',
     group  => 'root',
     mode   => '0755',
-    content => "* * * * * root 'cd /etc/puppetlabs/code/environments/production && /usr/bin/git pull >/dev/null'\n",
+    content => "* * * * * root cd /etc/puppetlabs/code/environments/production && /usr/bin/git pull >/dev/null\n",
   }
 
 }
