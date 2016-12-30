@@ -49,7 +49,43 @@ Dec 30 16:53:24 puppet-server startupscript: Finished running startup script /va
 
 ## Creating the Instance Group for the MongoDB machines
 
+* Create an instance template:
+```
+gcloud compute instance-templates create mongodb-replicaset-template \
+    --machine-type g1-small \
+    --image-family ubuntu-1604-lts \
+    --image-project ubuntu-os-cloud \
+    --boot-disk-type pd-ssd \
+    --boot-disk-size 25GB \
+    --tags mongodb-replicaset \
+    --scopes useraccounts-ro,storage-ro,logging-write,monitoring-write,service-management,service-control,compute-ro \
+    --metadata-from-file startup-script=mongodb_node_startup_script.sh
+```
+* Create the instance group:
+```
+gcloud compute instance-groups managed create mongodb-replicaset \
+    --base-instance-name mongodb-rs \
+    --size 3 \
+    --template mongodb-replicaset-template
+```
+* Set autoscaling on the previously created instance group:
+```
+gcloud compute instance-groups managed set-autoscaling mongodb-replicaset \
+    --max-num-replicas 7 \
+    --min-num-replicas 3 \
+    --target-cpu-utilization 0.5 \
+    --cool-down-period 15
+```
+
+## Causing syntethic CPU load to test autoscaling
+
 FIXME
+
+## Tear everything down
+
+This is an important step, since this was only a demo and you should avoid unneccessary bills with running multiple machines for a long time.
+
+FIMXE
 
 ## Contributing
 
