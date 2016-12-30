@@ -30,18 +30,21 @@ Security, extendability and flexibility was **NOT** really considered, becasue i
 gcloud compute instances create puppet-server \
     --metadata-from-file startup-script=puppet_server_startup_script.sh \
     --boot-disk-size 20GB --boot-disk-type=pd-ssd \
-    --machine-type g1-small
+    --machine-type g1-small \
+    --image-family ubuntu-1604-lts \
+    --image-project ubuntu-os-cloud
 ```
 * Login to the instance and check if the bootstrap was successful
+** Please note that the bootstrap process may last even up to 5 minutes
 ```
 gcloud compute ssh puppet-server
 sudo -i
-tail -n 600 /var/log/daemon.log | grep 'startup-script: '
+tail -n 600 /var/log/syslog | grep 'startupscript: '
 ```
 * You should see something like this in the last two lines:
 ```
-Dec 20 14:37:49 puppet-server startup-script: INFO startup-script: Return code 0.
-Dec 20 14:37:49 puppet-server startup-script: INFO Finished running startup scripts.
+Dec 30 16:53:23 puppet-server startupscript: Branch master set up to track remote branch master from origin.
+Dec 30 16:53:24 puppet-server startupscript: Finished running startup script /var/run/google.startup.script
 ```
 
 ## Creating the Instance Group for the MongoDB machines
