@@ -5,14 +5,14 @@ set -euf -o pipefail
 cd /tmp
 
 # Installing release package if needed
-if ! dpkg --get-selections | grep -q 'puppetlabs-release-pc1.*install'; then
+if ! dpkg --get-selections puppetlabs-release-pc1 | grep -q 'install'; then
   wget https://apt.puppetlabs.com/puppetlabs-release-pc1-xenial.deb
   dpkg -i puppetlabs-release-pc1-xenial.deb
   rm puppetlabs-release-pc1-xenial.deb
 fi
 
 # Installing puppet agent if needed
-if ! dpkg --get-selections | grep -q 'puppet-agent.*install'; then
+if ! dpkg --get-selections puppet-agent | grep -q 'install'; then
   apt-get update
   apt-get install -y puppet-agent
 fi
