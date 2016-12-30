@@ -52,7 +52,7 @@ fi
 if ! test -d '/etc/puppetlabs/code/environments/production/.git'; then
   cd /etc/puppetlabs/code/environments/production
   git init
-  git remote add origin git@github.com:nightw/gce-mongodb-demo.git
+  git remote add origin https://github.com/nightw/gce-mongodb-demo.git
   git fetch origin
   git checkout -b master --track origin/master
 fi
