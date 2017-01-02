@@ -21,7 +21,7 @@ cat >/etc/puppetlabs/puppet/puppet.conf <<EOF
   server = puppet-server
   noop = false
   report = true
-  runinterval = 300
+  runinterval = 60
   splay = false
   usecacheonfailure = true
 EOF

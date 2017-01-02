@@ -7,13 +7,13 @@ This demo showcases the following tools:
 - Google Compute Engine startup scripts
 - Google Compute Engine instance labeling for discovery purposes
 - A very basic Puppet server
-- A simple Puppet module to manage egy MongoDB replicaset with auto-join to the cluster
+- A simple Puppet module to manage a MongoDB replicaset with auto-joining new nodes to the cluster
 
 ## Disclaimer
 
-This project is only meant as an example showcasing how easily you can run a dinamically scaling MongoDB replicaset in Google Compute Engine using very little code and configuration.
+This project is only meant as an example showcasing how easily you can run a dinamically scaling MongoDB replicaset in Google Compute Engine using little code and configuration.
 
-Security, extendability and flexibility was **NOT** really considered, becasue it is just a simple demo project. Please **DO NOT** use it directly without modifications for managing **production deployments** of MongoDB!
+Security, extendability, error handling and flexibility was **NOT** really considered, becasue it is just a simple demo project. Please **DO NOT** use it directly without modifications for managing **production deployments** of MongoDB! In fact I simply advise you against running an autoscaling MongoDB replicaset in production in general, since it only boosts read performance and may have very serious, not expected side effects. So really consider this project only a showcase for Google Compute Engine autoscaling with startup scripts and Puppet added to the mix.
 
 ## Prerequisites
 
@@ -74,7 +74,7 @@ gcloud compute instance-groups managed set-autoscaling mongodb-replicaset \
     --max-num-replicas 7 \
     --min-num-replicas 3 \
     --target-cpu-utilization 0.5 \
-    --cool-down-period 15
+    --cool-down-period 180
 ```
 
 ## Causing syntethic CPU load to test autoscaling
