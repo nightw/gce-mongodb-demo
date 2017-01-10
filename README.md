@@ -35,7 +35,7 @@ gcloud compute instances create puppet-server \
     --image-project ubuntu-os-cloud
 ```
 * Login to the instance and check if the bootstrap was successful
-** Please note that the bootstrap process may last even up to 5 minutes
+   * Please note that the bootstrap process may last even up to 5 minutes
 ```
 gcloud compute ssh puppet-server
 sudo -i
@@ -66,6 +66,7 @@ gcloud compute instance-templates create mongodb-replicaset-template \
 gcloud compute instance-groups managed create mongodb-replicaset \
     --base-instance-name mongodb-rs \
     --size 3 \
+    --region $(gcloud config get-value compute/region) \
     --template mongodb-replicaset-template
 ```
 * Set autoscaling on the previously created instance group:
@@ -74,8 +75,21 @@ gcloud compute instance-groups managed set-autoscaling mongodb-replicaset \
     --max-num-replicas 7 \
     --min-num-replicas 3 \
     --target-cpu-utilization 0.5 \
+    --region $(gcloud config get-value compute/region) \
     --cool-down-period 180
 ```
+
+## Check on an instance that everything is set up properly
+
+Login to the first instance and check if MongoDB replicaset is running well:
+
+```
+gcloud compute ssh $(gcloud compute instances list --filter='tags.items:mongodb-replicaset' | tail -n+2 | head -n 1 | awk '{print $1}') --zone $(gcloud compute instances list --filter='tags.items:mongodb-replicaset' | tail -n+2 | head -n 1 | awk '{print $2}')
+mongo
+rs.status().members
+```
+
+It should have 3 nodes with each of them in the this state: `"state" : 2`
 
 ## Causing syntethic CPU load to test autoscaling
 
@@ -85,7 +99,13 @@ FIXME
 
 This is an important step, since this was only a demo and you should avoid unneccessary bills with running multiple machines for a long time.
 
-FIMXE
+Run this in the command line on your machine:
+
+```
+gcloud compute instance-groups managed delete mongodb-replicaset --region $(gcloud config get-value compute/region)
+gcloud compute instance-templates delete mongodb-replicaset-template
+gcloud compute instances delete puppet-server
+```
 
 ## Contributing
 
