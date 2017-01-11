@@ -59,7 +59,7 @@ gcloud compute instance-templates create mongodb-replicaset-template \
     --boot-disk-size 25GB \
     --tags mongodb-replicaset \
     --scopes useraccounts-ro,storage-ro,logging-write,monitoring-write,service-management,service-control,compute-ro \
-    --metadata-from-file startup-script=mongodb_node_startup_script.sh
+    --metadata-from-file startup-script=mongodb_node_startup_script.sh,shutdown-script=mongodb_node_shutdown_script.sh
 ```
 * Create the instance group:
 ```
