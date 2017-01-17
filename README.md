@@ -76,7 +76,7 @@ gcloud compute instance-groups managed set-autoscaling mongodb-replicaset \
     --min-num-replicas 3 \
     --target-cpu-utilization 0.5 \
     --region $(gcloud config get-value compute/region) \
-    --cool-down-period 180
+    --cool-down-period 60
 ```
 
 ## Check on an instance that everything is set up properly
@@ -85,15 +85,42 @@ Login to the first instance and check if MongoDB replicaset is running well:
 
 ```
 gcloud compute ssh $(gcloud compute instances list --filter='tags.items:mongodb-replicaset' | tail -n+2 | head -n 1 | awk '{print $1}') --zone $(gcloud compute instances list --filter='tags.items:mongodb-replicaset' | tail -n+2 | head -n 1 | awk '{print $2}')
-mongo
-rs.status().members
+mongo --eval 'rs.status().members'
 ```
 
-It should have 3 nodes with each of them in the this state: `"state" : 2`
+It should have 3 nodes with two of them in the this state: `"stateStr" : "SECONDARY"` and one of them in this: `"stateStr" : "PRIMARY"`.
 
 ## Causing syntethic CPU load to test autoscaling
 
-FIXME
+* SSH into a node and make it overloaded (and leave the SSH session open):
+```
+gcloud compute ssh $(gcloud compute instances list --filter='tags.items:mongodb-replicaset' | tail -n+2 | head -n 1 | awk '{print $1}') --zone $(gcloud compute instances list --filter='tags.items:mongodb-replicaset' | tail -n+2 | head -n 1 | awk '{print $2}')
+cat /dev/zero > /dev/null
+```
+*  Watch until Google Compute Engine starts new nodes in a new shell on your machine
+```
+while :; do clear; gcloud compute instance-groups managed list-instances mongodb-replicaset --region $(gcloud config get-value compute/region); sleep 2; done
+```
+* After the new VMs have been created in the replicaset wait a bit then SSH to one of them again and check the status of the cluster
+```
+gcloud compute ssh $(gcloud compute instances list --filter='tags.items:mongodb-replicaset' | tail -n+2 | head -n 1 | awk '{print $1}') --zone $(gcloud compute instances list --filter='tags.items:mongodb-replicaset' | tail -n+2 | head -n 1 | awk '{print $2}')
+mongo --eval 'rs.status().members'
+```
+* It should have 6 nodes with five of them in the this state: `"stateStr" : "SECONDARY"` and one of them in this: `"stateStr" : "PRIMARY"`.
+* Now stop the syntethic CPU load in the still open shell from before with CTRL-C
+* Watch the replicaset again for the disappearing nodes on your machine:
+```
+while :; do clear; gcloud compute instance-groups managed list-instances mongodb-replicaset --region $(gcloud config get-value compute/region); sleep 2; done
+```
+* Please note that it will take about 10-12 minutes before VMs are started to shut down
+* When one or two of them has been deleted SSH again to the cluster and see the status of it:
+```
+gcloud compute ssh $(gcloud compute instances list --filter='tags.items:mongodb-replicaset' | tail -n+2 | head -n 1 | awk '{print $1}') --zone $(gcloud compute instances list --filter='tags.items:mongodb-replicaset' | tail -n+2 | head -n 1 | awk '{print $2}')
+mongo --eval 'rs.status().members'
+```
+* It should have 3 nodes with two of them in the this state: `"stateStr" : "SECONDARY"` and one of them in this: `"stateStr" : "PRIMARY"`.
+
+Now you have seen the autoscaler scaling up and down instances and the MongoDB replicaset also growing and shrinking alongside.
 
 ## Tear everything down
 
