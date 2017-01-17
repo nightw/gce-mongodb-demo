@@ -72,7 +72,6 @@ class gce_mongodb_test_mongodb_autoscale {
       ensure  => present,
       members => $rs_members,
       require => Class['Mongodb::Server'],
-      before  => File['/root/remove_old_rs_members.js'],
     }
 
   }
