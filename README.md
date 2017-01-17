@@ -22,6 +22,11 @@ Security, extendability, error handling and flexibility was **NOT** really consi
 1. Download and install the `gcloud` command line tool (Google Cloud SDK) (See the details [here](https://cloud.google.com/sdk/downloads))
 1. Run `gcloud init` command to authenticate yourself against the previously created Google Cloud Platform Project
    * Also don't skip setting up a preferred default region and zone with compute engine during the gcloud init
+1. Clone this git repository to your computer and set your working directory to it:
+```
+git clone https://github.com/nightw/gce-mongodb-demo.git
+cd gce-mongodb-demo
+```
 
 ## Launching the Puppet server
 
