@@ -139,6 +139,10 @@ gcloud compute instance-templates delete mongodb-replicaset-template
 gcloud compute instances delete puppet-server
 ```
 
+## Another MongoDB autoscaling example which is simpler
+
+There is an example which is simpler because it uses only startup and shutdown scripts and instance metadata to configure the MongoDB replicaset. It can be found on the `master` branch of this repository. You might want to check that out too.
+
 ## Contributing
 
 1. Fork it!
