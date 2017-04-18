@@ -26,7 +26,7 @@ Security, extendability, error handling and flexibility was **NOT** really consi
 git clone https://github.com/nightw/gce-mongodb-demo.git
 cd gce-mongodb-demo
 ```
-1. Create an SSH keypair on your machine for the VMs to be able to SSH to each other:
+6. Create an SSH keypair on your machine for the VMs to be able to SSH to each other:
 ```
 ssh-keygen -f /tmp/temp_id_rsa -C ubuntu@mongodb-rs
 ```
